@@ -1,9 +1,15 @@
-numpy
-pandas
-scikit-learn
-scipy
-joblib
-streamlit
-xgboost
-matplotlib
-seaborn
+# Pinned — v1 shipped this file unpinned, which is a real hazard for a repo whose
+# artifacts are sklearn pickles (unpickling across sklearn versions can break).
+#
+# Phase 0 (audit) needs only what is below. Later phases add torch, faiss-cpu,
+# zxcvbn, datasketch, rapidfuzz, anthropic, and streamlit — those land with the
+# phase that introduces them rather than being declared up front.
+
+numpy==2.5.2
+pandas==3.0.5
+matplotlib==3.11.1
+scipy==1.18.1
+
+# Required to load and re-derive the v1 baselines under legacy/v1/artifacts/.
+scikit-learn==1.9.0
+joblib==1.5.3

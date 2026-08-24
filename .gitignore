@@ -1,0 +1,50 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ---- Environments ----
+.venv/
+venv/
+env/
+.env
+.env.local
+
+# ---- Tooling caches ----
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+.DS_Store
+
+# ---- Data ----
+# Breach corpora are NEVER committed. See scripts/fetch_artifacts.py.
+data/raw/
+data/processed/
+data/index/
+!data/index/guidance.faiss
+!data/index/guidance_chunks.jsonl
+*.txt.gz
+rockyou*
+
+# ---- Model artifacts (distributed via GitHub Releases) ----
+checkpoints/
+*.pt
+*.ckpt
+*.npz
+!tests/fixtures/*.npz
+
+# ---- Legacy v1 pickles (regenerable; 42MB) ----
+Artifacts/X_train.pkl
+Artifacts/X_test.pkl
+Artifacts/y_train.pkl
+Artifacts/y_test.pkl
+
+# ---- Generated reports ----
+docs/figures/*.png
+reports/

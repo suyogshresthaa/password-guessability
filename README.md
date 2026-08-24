@@ -1,5 +1,17 @@
 # Password Strength Detection using NLP and Machine Learning
 
+> ### ⚠️ This README describes v1, which is being replaced.
+>
+> An audit found that the dataset's `strength` label is a **pure function of password length** — a three-line `if` statement reproduces all 100,000 labels with zero errors, so the 99.33% reported below is *worse* than the trivial rule the model was unknowingly approximating.
+>
+> **Read the audit → [`docs/00-audit-v1.md`](docs/00-audit-v1.md)** · reproduce it → [`notebooks/00_audit.ipynb`](notebooks/00_audit.ipynb)
+>
+> v1 is archived under [`legacy/v1/`](legacy/v1/). v2 reframes the problem as **guessability estimation** — a character-level neural model trained on real breach data, converted to "how many guesses does an attacker need," and validated by running the attack. This README will be rewritten when v2 lands.
+>
+> *Everything below is preserved as written, including the errors the audit documents.*
+
+---
+
 ## Author
 Suyog Shrestha
 
