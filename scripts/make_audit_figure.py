@@ -15,6 +15,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.ticker import FuncFormatter
 
+# Deterministic SVG output — stable element ids and no embedded timestamp, so
+# regenerating the figure never dirties the working tree.
+plt.rcParams["svg.hashsalt"] = "pwguess-audit"
+
 ROOT = Path(__file__).resolve().parents[1]
 DB = ROOT / "data" / "eval" / "000webhost_100k.sqlite"
 OUT = ROOT / "docs" / "figures"
@@ -120,7 +124,10 @@ def render(theme_name, counts, tail):
 
     OUT.mkdir(parents=True, exist_ok=True)
     path = OUT / f"00_label_vs_length{t['suffix']}.svg"
-    fig.savefig(path, format="svg", bbox_inches="tight", facecolor=t["surface"])
+    fig.savefig(
+        path, format="svg", bbox_inches="tight",
+        facecolor=t["surface"], metadata={"Date": None},
+    )
     plt.close(fig)
     return path
 
