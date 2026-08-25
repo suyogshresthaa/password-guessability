@@ -90,7 +90,7 @@ The underlying error was accepting a problem statement without asking whether it
 
 The security literature settled this: **strength is guessability** — the number of attempts an adversary needs before arriving at your password. It's a continuous quantity, it's defined relative to an explicit attacker model, and it's measurable by running the attack.
 
-v2 estimates it with a character-level neural language model trained on real breach data, converts model probability to a guess number via Monte-Carlo estimation (Dell'Amico & Filippone, CCS 2015), and validates by actually enumerating guesses against a held-out corpus. There is no label to overfit, and the metric — *what fraction of real passwords fall within a guess budget* — cannot be satisfied by rediscovering `len()`.
+v2 estimates it with a character-level neural language model trained on real breach data. That model builds a ranked attacker's guess list — its own generated candidates merged with RockYou in frequency order — and a password's score is simply its position in that list. There is no label to overfit, and the metric — *what fraction of real passwords fall within a guess budget* — cannot be satisfied by rediscovering `len()`.
 
 *(The full method write-up and threat model — `01-method.md`, `03-threat-model.md` — land with the phases that produce them.)*
 
@@ -102,10 +102,10 @@ Each of these exists because of a specific failure above.
 |---|---|
 | A trivial-baseline gauntlet runs on **every** evaluation and its output is committed as CSV — length rule, character-class rule, random ordering, and a frequency-ranked wordlist attack | §2 — never again reporting a number without knowing what free costs |
 | No labels anywhere: the objective is likelihood of observed passwords; the metric is fraction cracked within budget | §1 — no heuristic to rediscover |
-| Cross-corpus evaluation is mandatory (train RockYou 2009, test 000webhost 2015), with train/test disjointness asserted in CI | §5 — memorisation shows up as a collapsed curve |
+| The internal RockYou train/val split is disjoint by construction — a password's split is a hash of its own text, so a leaked split file can't desync from the data | §5 — no accidental training on held-out rows |
+| Cross-corpus overlap (RockYou vs. the 2015 000webhost eval set) is *measured and reported, never scrubbed from the eval set* — a real attacker has RockYou too, so overlap is genuine attack surface, not leakage | Corrects an earlier draft of this guardrail, which called for asserting disjointness across corpora. Deleting the overlap would inflate the model's apparent contribution — the opposite failure from a leaky split, and just as dishonest |
 | A too-good result triggers an investigation, not a dismissal. Sanity anchors (`123456` ranks top-10; random 16-char saturates; guess number monotone in log-probability) fail the build | §3 |
-| One scoring path — `Scorer.score()` — imported by the CLI, the eval harness, and the app; a test AST-walks the app and fails if it imports a model directly | §4 |
-| Calibration is plotted before the score is trusted: Monte-Carlo estimates against exact enumerated ranks | §4 — no more uncalibrated numbers shown as percentages |
+| One scoring path — `score.py` — imported by the evaluation harness and the app; a test asserts the app never reimplements scoring | §4, v1's exact bug: a second copy of the feature code in `app.py` silently drifted from the one used in training |
 
 ## 7. Reproducing this audit
 
